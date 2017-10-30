@@ -2,9 +2,9 @@ package home.a1exru.eltask.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import home.a1exru.eltask.controller.DocumentSearchController.SearchResponse;
-import home.a1exru.eltask.dto.Document;
-import home.a1exru.eltask.service.DocumentService;
+import home.a1exru.eltask.controller.PostSearchController.SearchResponse;
+import home.a1exru.eltask.dto.Post;
+import home.a1exru.eltask.service.PostService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +25,10 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DocumentSearchControllerTest {
+public class PostSearchControllerTest {
 
     @MockBean
-    private DocumentService documentService;
+    private PostService postService;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -43,22 +43,22 @@ public class DocumentSearchControllerTest {
 
     @Test
     public void search() throws IOException {
-        List<Document> documents = Arrays.asList(
-                new Document("test_title", "test_body", "n"),
-                new Document("test_title_second", "test_body_second", "n"),
-                new Document("test_title_third", "test_body_third", "n")
+        List<Post> posts = Arrays.asList(
+                new Post("test_title", "test_body", "n"),
+                new Post("test_title_second", "test_body_second", "n"),
+                new Post("test_title_third", "test_body_third", "n")
         );
-        given(this.documentService.search("test", "n")).willReturn(documents);
+        given(this.postService.search("test", "n", 40, 20)).willReturn(posts);
 
-        SearchResponse result = this.restTemplate.getForObject("/documents?query=test&sentiment=n", SearchResponse.class);
+        SearchResponse result = this.restTemplate.getForObject("/posts?query=test&sentiment=n&from=40&size=20", SearchResponse.class);
         assertThat(jsonTester.write(result)).isEqualToJson("/resp/search.json");
     }
 
     @Test
     public void emptyResponse() throws IOException {
-        List<Document> documents = Collections.emptyList();
-        given(this.documentService.search("test_empty", "y")).willReturn(documents);
-        SearchResponse result = this.restTemplate.getForObject("/documents?query=test_empty&sentiment=y", SearchResponse.class);
+        List<Post> posts = Collections.emptyList();
+        given(this.postService.search("test_empty", "y", 0, 10)).willReturn(posts);
+        SearchResponse result = this.restTemplate.getForObject("/posts?query=test_empty&sentiment=y&from=0&size=10", SearchResponse.class);
         assertThat(jsonTester.write(result)).isEqualToJson("/resp/search_empty.json");
     }
 

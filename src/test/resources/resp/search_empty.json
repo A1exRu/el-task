@@ -1,7 +1,9 @@
 {
   "criteria": {
     "query": "test_empty",
-    "sentiment": "y"
+    "sentiment": "y",
+    "from": 0,
+    "size": 10
   },
   "data": []
 }

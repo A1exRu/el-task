@@ -1,7 +1,9 @@
 {
   "criteria": {
     "query": "test",
-    "sentiment": "n"
+    "sentiment": "n",
+    "from": 40,
+    "size": 20
   },
   "data": [
     {

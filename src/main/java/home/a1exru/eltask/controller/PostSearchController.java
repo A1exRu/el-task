@@ -1,7 +1,7 @@
 package home.a1exru.eltask.controller;
 
-import home.a1exru.eltask.dto.Document;
-import home.a1exru.eltask.service.DocumentService;
+import home.a1exru.eltask.dto.Post;
+import home.a1exru.eltask.service.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/documents")
-public class DocumentSearchController {
+@RequestMapping("/posts")
+public class PostSearchController {
 
     @Autowired
-    private DocumentService documentService;
+    private PostService postService;
 
     @GetMapping
     public SearchResponse search(SearchCmd command) {
-        List<Document> data = documentService.search(command.query, command.sentiment);
+        List<Post> data = postService.search(command.query, command.sentiment, command.from, command.size);
         return new SearchResponse(command, data);
     }
 
@@ -29,13 +29,15 @@ public class DocumentSearchController {
     public static class SearchCmd {
         String query;
         String sentiment;
+        int from;
+        int size = 10;
     }
 
     @Data
     @NoArgsConstructor @AllArgsConstructor
     public static class SearchResponse {
         SearchCmd criteria;
-        List<Document> data;
+        List<Post> data;
     }
 
 }
