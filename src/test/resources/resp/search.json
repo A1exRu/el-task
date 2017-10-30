@@ -1,0 +1,23 @@
+{
+  "criteria": {
+    "query": "test",
+    "sentiment": "n"
+  },
+  "data": [
+    {
+      "title": "test_title",
+      "body": "test_body",
+      "sentiment": "n"
+    },
+    {
+      "title": "test_title_second",
+      "body": "test_body_second",
+      "sentiment": "n"
+    },
+    {
+      "title": "test_title_third",
+      "body": "test_body_third",
+      "sentiment": "n"
+    }
+  ]
+}
