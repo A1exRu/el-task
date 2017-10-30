@@ -21,5 +21,11 @@
       "body": "test_body_third",
       "sentiment": "n"
     }
+  ],
+  "keywords": [
+    {
+      "keyword": "test_keyword",
+      "relevance": 5
+    }
   ]
 }

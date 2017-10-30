@@ -3,8 +3,10 @@ package home.a1exru.eltask.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import home.a1exru.eltask.controller.PostSearchController.SearchResponse;
+import home.a1exru.eltask.dto.Keyword;
 import home.a1exru.eltask.dto.Post;
 import home.a1exru.eltask.service.PostService;
+import org.elasticsearch.common.collect.Tuple;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,11 +46,13 @@ public class PostSearchControllerTest {
     @Test
     public void search() throws IOException {
         List<Post> posts = Arrays.asList(
-                new Post("test_title", "test_body", "n"),
-                new Post("test_title_second", "test_body_second", "n"),
-                new Post("test_title_third", "test_body_third", "n")
+                new Post("test_title", "test_body", "n", Collections.emptyList()),
+                new Post("test_title_second", "test_body_second", "n", Collections.emptyList()),
+                new Post("test_title_third", "test_body_third", "n", Collections.emptyList())
         );
-        given(this.postService.search("test", "n", 40, 20)).willReturn(posts);
+
+        List<Keyword> keywords = Collections.singletonList(new Keyword("test_keyword", 5));
+        given(this.postService.search("test", "n", 40, 20)).willReturn(new Tuple<>(posts, keywords));
 
         SearchResponse result = this.restTemplate.getForObject("/posts?query=test&sentiment=n&from=40&size=20", SearchResponse.class);
         assertThat(jsonTester.write(result)).isEqualToJson("/resp/search.json");
@@ -57,7 +61,8 @@ public class PostSearchControllerTest {
     @Test
     public void emptyResponse() throws IOException {
         List<Post> posts = Collections.emptyList();
-        given(this.postService.search("test_empty", "y", 0, 10)).willReturn(posts);
+        List<Keyword> keywords = Collections.emptyList();
+        given(this.postService.search("test_empty", "y", 0, 10)).willReturn(new Tuple<>(posts, keywords));
         SearchResponse result = this.restTemplate.getForObject("/posts?query=test_empty&sentiment=y&from=0&size=10", SearchResponse.class);
         assertThat(jsonTester.write(result)).isEqualToJson("/resp/search_empty.json");
     }

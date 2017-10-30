@@ -65,7 +65,8 @@ public class PostRepositoryImpl implements PostRepository {
         String title = Objects.toString(source.get("title"));
         String body = Objects.toString(source.get("body"));
         String sentiment = Objects.toString(source.get("sentiment"));
-        return new Post(title, body, sentiment);
+        List<String> keyPhrases = (List<String>) source.get("keyPhrases");
+        return new Post(title, body, sentiment, keyPhrases);
     }
 
 }
