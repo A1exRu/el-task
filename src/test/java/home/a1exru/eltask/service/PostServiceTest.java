@@ -6,6 +6,7 @@ import home.a1exru.eltask.repository.PostRepository;
 import org.elasticsearch.common.collect.Tuple;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -15,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,6 +54,17 @@ public class PostServiceTest {
         assertEquals(Integer.valueOf(2), actualKeywords.get(1).getRelevance());
         assertEquals("phrase_one", actualKeywords.get(2).getKeyword());
         assertEquals(Integer.valueOf(1), actualKeywords.get(2).getRelevance());
+    }
+
+    @Test
+    public void search_moreThan100() {
+        when(postRepository.search("q", "s", 0, 199)).thenReturn(Collections.emptyList());
+        postService.search("q", "s", 0, 199);
+
+        ArgumentCaptor<Integer> sizeCaptor = ArgumentCaptor.forClass(Integer.class);
+        verify(postRepository).search(eq("q"), eq("s"), eq(0), sizeCaptor.capture());
+        Integer size = sizeCaptor.getValue();
+        assertEquals(Integer.valueOf(100), size);
     }
 
     private Post post(int number, String... keyPhrases) {

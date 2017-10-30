@@ -21,6 +21,7 @@ public class PostService {
     private PostRepository postRepository;
 
     public Tuple<List<Post>, List<Keyword>> search(String query, String sentiment, int from, int size) {
+        size = Math.min(100, size);
         List<Post> posts = postRepository.search(query, sentiment, from, size);
 
         Map<String, Integer> keyPhrases = new HashMap<>();
